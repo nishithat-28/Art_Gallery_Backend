@@ -1,0 +1,20 @@
+bin/
+obj/
+.vscode/
+.vs/
+*.user
+*.suo
+*.log
+*.env
+# appsettings.Development.json
+.DS_Store
+Thumbs.db
+.idea/
+publish/
+node_modules/
+
+
+# EF Core Migrations build artifacts (optional if you want)
+Migrations/
+gitsshkeys
+gitsshkeys.pub
