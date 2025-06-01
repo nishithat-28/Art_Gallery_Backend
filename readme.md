@@ -20,15 +20,17 @@
 
 ### 🎨 ArtWork
 
-| Method | Endpoint                             | Description                     |
-| :----- | :----------------------------------- | :------------------------------ |
-| GET    | `/api/ArtWork`                       | Get all artworks                |
-| GET    | `/api/ArtWork/{id}`                  | Get artwork by ID               |
-| GET    | `/api/ArtWork/category/{categoryId}` | Get artworks by category        |
-| POST   | `/api/ArtWork/batch`                 | Get artworks by IDs (in body)   |
-| POST   | `/api/ArtWork`                       | Create new artwork (Admin only) |
-| PUT    | `/api/ArtWork/{id}`                  | Update artwork (Admin only)     |
-| DELETE | `/api/ArtWork/{id}`                  | Delete artwork (Admin only)     |
+| Method | Endpoint                             | Description                                     |
+| :----- | :----------------------------------- | :---------------------------------------------- |
+| GET    | `/api/ArtWork`                       | Get all artworks                                |
+| GET    | `/api/ArtWork/{id}`                  | Get artwork by ID                               |
+| GET    | `/api/ArtWork/category/{categoryId}` | Get artworks by category                        |
+| GET    | `/api/ArtWork/{id}/image`            | Get image bytes for artwork by ID               |
+| POST   | `/api/ArtWork/batch`                 | Get artworks by IDs (in body) (Admin/Customer)  |
+| POST   | `/api/ArtWork`                       | Create new artwork (Admin/Customer)             |
+| PUT    | `/api/ArtWork/{id}`                  | Update artwork (Admin only)                     |
+| DELETE | `/api/ArtWork/{id}`                  | Delete artwork (Admin only)                     |
+| POST   | `/api/ArtWork/process-database-images` | Process images stored in the database (Admin/Customer) |
 
 ---
 
@@ -102,6 +104,7 @@
 - Role-based security (Admin vs Customer roles)
 - RESTful API endpoints for artwork, user, and order management
 - SQL Server database integration using Entity Framework Core
+- Images stored as byte arrays in the database and served via endpoint
 - Proper relationships between entities
 - Invoice generation functionality
 
