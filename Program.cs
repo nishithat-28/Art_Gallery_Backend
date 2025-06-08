@@ -1,4 +1,4 @@
-using ArtGallery.API.Data;
+﻿using ArtGallery.API.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,8 +21,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
+            //IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            //    builder.Configuration["AppSettings:Token"])),
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                builder.Configuration["AppSettings:Token"])),
+                  builder.Configuration["AppSettings:Token"] ?? throw new InvalidOperationException("Token not found in configuration"))),
+
             ValidateIssuer = false,
             ValidateAudience = false
         };
@@ -32,11 +35,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp",
-        policy => policy
+        policy => {
+            policy
             .WithOrigins("http://localhost:4200") // Angular default port
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .AllowCredentials());
+            .AllowCredentials();
+        });
 });
 
 // Add DataSeeder as a scoped service

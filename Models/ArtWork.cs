@@ -42,7 +42,7 @@ namespace ArtGallery.API.Models
         [ForeignKey("CategoryId")]
         public Category Category { get; set; } = null!;
 
-        public bool IsAvailable { get; set; }
+        public bool IsAvailable { get; set; } = true;
 
         public DateTime CreatedAt { get; set; }
 

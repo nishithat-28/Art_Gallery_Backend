@@ -30,7 +30,7 @@ namespace ArtGallery.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderResponseDto>>> GetOrders()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             bool isAdmin = User.IsInRole("Admin");
 
             var ordersQuery = _context.Orders
@@ -39,11 +39,8 @@ namespace ArtGallery.API.Controllers
                 .ThenInclude(oi => oi.ArtWork)
                 .AsQueryable();
 
-            // If not admin, only return user's own orders
-            if (!isAdmin)
-            {
-                ordersQuery = ordersQuery.Where(o => o.UserId == userId);
-            }
+            ordersQuery = ordersQuery.Where(o => o.UserId == userId);
+            
 
             var orders = await ordersQuery.ToListAsync();
 
@@ -140,12 +137,6 @@ namespace ArtGallery.API.Controllers
             var artWorks = await _context.ArtWorks
                 .Where(a => artWorkIds.Contains(a.Id) && a.IsAvailable)
                 .ToListAsync();
-
-            if (artWorks.Count != artWorkIds.Count)
-            {
-                return BadRequest("One or more art works are not available");
-            }
-
             // Create order
             var order = new Order
             {
@@ -162,7 +153,13 @@ namespace ArtGallery.API.Controllers
             decimal totalAmount = 0;
             foreach (var item in orderCreateDto.OrderItems)
             {
-                var artWork = artWorks.First(a => a.Id == item.ArtWorkId);
+                var artWork = artWorks.FirstOrDefault(a => a.Id == item.ArtWorkId);
+
+                if (artWork == null)
+                {
+                    return BadRequest($"Artwork with ID {item.ArtWorkId} is not available or does not exist.");
+                }
+
                 var orderItem = new OrderItem
                 {
                     ArtWorkId = item.ArtWorkId,
@@ -173,7 +170,7 @@ namespace ArtGallery.API.Controllers
                 totalAmount += artWork.Price * item.Quantity;
 
                 // Mark artwork as unavailable (since it's being purchased)
-                artWork.IsAvailable = false;
+                // .IsAvailable = false;
             }
 
             order.TotalAmount = totalAmount;
