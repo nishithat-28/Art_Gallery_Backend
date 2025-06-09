@@ -292,7 +292,7 @@ namespace ArtGallery.API.Controllers
 
         // PUT: api/ArtWork/5
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Customer")]
         public async Task<IActionResult> UpdateArtWork(int id, [FromForm] UpdateArtWorkDto updateArtWorkDto)
         {
             if (id != updateArtWorkDto.Id)
@@ -341,40 +341,6 @@ namespace ArtGallery.API.Controllers
                     return NotFound();
                 throw;
             }
-
-            return NoContent();
-        }
-
-        // DELETE: api/ArtWork/5
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteArtWork(int id)
-        {
-            var artWork = await _context.ArtWorks.FindAsync(id);
-            if (artWork == null)
-            {
-                return NotFound();
-            }
-
-            // Check if the artwork is part of any order
-            var isInOrder = await _context.OrderItems.AnyAsync(oi => oi.ArtWorkId == id);
-            if (isInOrder)
-            {
-                // Instead of deleting, mark as unavailable
-                artWork.IsAvailable = false;
-            }
-            else
-            {
-                // Delete the image file if it exists
-                if (!string.IsNullOrEmpty(artWork.ImageFileName))
-                {
-                    ArtImageBytesHelper.DeleteImageFromFileSystem(artWork.ImageFileName);
-                }
-
-                _context.ArtWorks.Remove(artWork);
-            }
-
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }
