@@ -29,7 +29,6 @@
 | POST   | `/api/ArtWork/batch`                 | Get artworks by IDs (in body) (Admin/Customer)  |
 | POST   | `/api/ArtWork`                       | Create new artwork (Admin/Customer)             |
 | PUT    | `/api/ArtWork/{id}`                  | Update artwork (Admin only)                     |
-| DELETE | `/api/ArtWork/{id}`                  | Delete artwork (Admin only)                     |
 | POST   | `/api/ArtWork/process-database-images` | Process images stored in the database (Admin/Customer) |
 
 ---
